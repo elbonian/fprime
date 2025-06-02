@@ -1,5 +1,6 @@
 module Ref {
 
+  import Svc.MagneticDetumble
   # ----------------------------------------------------------------------
   # Symbolic constants for port numbers
   # ----------------------------------------------------------------------
@@ -66,6 +67,7 @@ module Ref {
     instance dpWriter
     instance dpBufferManager
     instance version
+    instance magneticDetumble
 
     # ----------------------------------------------------------------------
     # Pattern graph specifiers
@@ -84,6 +86,7 @@ module Ref {
     time connections instance posixTime
 
     health connections instance $health
+    connections instance magneticDetumble
 
     # ----------------------------------------------------------------------
     # Telemetry packets
@@ -139,6 +142,7 @@ module Ref {
       rateGroup1Comp.RateGroupMemberOut[3] -> fileDownlink.Run
       rateGroup1Comp.RateGroupMemberOut[4] -> systemResources.run
       rateGroup1Comp.RateGroupMemberOut[5] -> comQueue.run
+      rateGroup1Comp.RateGroupMemberOut[6] -> magneticDetumble.schedIn
 
       # Rate group 2
       rateGroupDriverComp.CycleOut[Ports_RateGroups.rateGroup2] -> rateGroup2Comp.CycleIn
@@ -213,6 +217,11 @@ module Ref {
       # Send filled DP
       SG1.productSendOut -> dpMgr.productSendIn[0]
 
+    }
+
+    connections MagneticDetumbleIO {
+      magneticDetumble.magnetorquerCmdOut -> comStub.comDataIn
+      # angularVelocityIn and magFieldIn are left unconnected for now
     }
 
   }

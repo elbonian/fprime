@@ -111,6 +111,11 @@ module Ref {
 
   instance typeDemo: Ref.TypeDemo base id 0x1200
 
+  instance magneticDetumble: Svc.MagneticDetumble base id 0x1300 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 100 # Adjust priority as needed, typical for app tasks
+
   # ----------------------------------------------------------------------
   # Queued component instances
   # ----------------------------------------------------------------------
