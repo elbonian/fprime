@@ -111,6 +111,11 @@ module Ref {
 
   instance typeDemo: Ref.TypeDemo base id 0x1200
 
+  instance magneticDetumble: Svc.MagneticDetumble base id 0x1300
+  instance angularVelocityStub: Ref.AngularVelocityStub base id 0x1400
+  instance magneticFieldStub: Ref.MagneticFieldStub base id 0x1500
+  instance dipoleCmdLogger: Svc.ComLogger base id 0x1600
+
   # ----------------------------------------------------------------------
   # Queued component instances
   # ----------------------------------------------------------------------

@@ -1,0 +1,4 @@
+# Ignore any generated diagrams or specific documentation tool outputs
+*.png
+*.jpg
+*.pdf

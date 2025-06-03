@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="MagneticFieldStub" kind="active" namespace="Ref">
+    <comment>Stub component to output a constant magnetic field vector.</comment>
+    <import_port_type>Svc/MagneticDetumble/Ports.fpp</import_port_type>
+    <ports>
+        <port name="vectorOut" data_type="Svc.MagField" kind="output" max_number="1"/>
+        <port name="schedIn" data_type="Fw.Sched" kind="input" max_number="1"/>
+    </ports>
+</component>

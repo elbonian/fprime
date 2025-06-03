@@ -63,5 +63,6 @@ endif()
 
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/PosixTime/")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/LinuxTimer/")
+add_subdirectory(MagneticDetumble)
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Version/")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FpySequencer/")

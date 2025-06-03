@@ -56,6 +56,12 @@ add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/RecvBuffApp/")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SendBuffApp/")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SignalGen/")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/TypeDemo/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/AngularVelocityStub/") # Add new stub
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/MagneticFieldStub/")   # Add new stub
+
+# Add Svc components used by Ref if not already covered by FPrime.cmake core includes
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/../Svc/MagneticDetumble") # Add MagneticDetumble
+# Assuming Svc/ComLogger is pulled in by default or by another Svc component dependency in Top.
 
 # Add Topology subdirectory
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Top/")

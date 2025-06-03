@@ -66,6 +66,11 @@ module Ref {
     instance dpWriter
     instance dpBufferManager
     instance version
+    # Added instances for MagneticDetumble integration
+    instance magneticDetumble
+    instance angularVelocityStub
+    instance magneticFieldStub
+    instance dipoleCmdLogger
 
     # ----------------------------------------------------------------------
     # Pattern graph specifiers
@@ -142,10 +147,13 @@ module Ref {
 
       # Rate group 2
       rateGroupDriverComp.CycleOut[Ports_RateGroups.rateGroup2] -> rateGroup2Comp.CycleIn
-      rateGroup2Comp.RateGroupMemberOut[0] -> cmdSeq.schedIn
-      rateGroup2Comp.RateGroupMemberOut[1] -> sendBuffComp.SchedIn
-      rateGroup2Comp.RateGroupMemberOut[2] -> SG3.schedIn
-      rateGroup2Comp.RateGroupMemberOut[3] -> SG4.schedIn
+      rateGroup2Comp.RateGroupMemberOut[0] -> cmdSeq.schedIn         # Existing index 0
+      rateGroup2Comp.RateGroupMemberOut[1] -> sendBuffComp.SchedIn   # Existing index 1
+      rateGroup2Comp.RateGroupMemberOut[2] -> magneticDetumble.schedIn # New index 2
+      rateGroup2Comp.RateGroupMemberOut[3] -> angularVelocityStub.schedIn # New index 3
+      rateGroup2Comp.RateGroupMemberOut[4] -> magneticFieldStub.schedIn # New index 4
+      rateGroup2Comp.RateGroupMemberOut[5] -> SG3.schedIn            # Shifted from index 2
+      rateGroup2Comp.RateGroupMemberOut[6] -> SG4.schedIn            # Shifted from index 3
 
       # Rate group 3
       rateGroupDriverComp.CycleOut[Ports_RateGroups.rateGroup3] -> rateGroup3Comp.CycleIn
@@ -213,6 +221,29 @@ module Ref {
       # Send filled DP
       SG1.productSendOut -> dpMgr.productSendIn[0]
 
+    }
+
+    connections MagneticDetumbleIntegration {
+        # MagneticDetumble and stubs connections
+        # Note: schedIn connections are handled in RateGroups section
+        connect angularVelocityStub.vectorOut to magneticDetumble.angularVelocityIn
+        connect magneticFieldStub.vectorOut to magneticDetumble.magneticFieldIn
+        connect magneticDetumble.dipoleRequestOut to dipoleCmdLogger.comIn
+
+        # Standard connections for MagneticDetumble
+        connect magneticDetumble.Log to eventLogger.LogRecv
+        connect magneticDetumble.LogText to textLogger.LogTextRecv
+        connect magneticDetumble.Time to posixTime.timeCaller # Changed from timeReceiver
+
+        # Standard connections for AngularVelocityStub
+        connect angularVelocityStub.Time to posixTime.timeCaller # Changed from timeReceiver
+
+        # Standard connections for MagneticFieldStub
+        connect magneticFieldStub.Time to posixTime.timeCaller # Changed from timeReceiver
+
+        # Standard connections for dipoleCmdLogger (ComLogger)
+        connect dipoleCmdLogger.Log to eventLogger.LogRecv
+        connect dipoleCmdLogger.Time to posixTime.timeCaller # Changed from timeReceiver
     }
 
   }

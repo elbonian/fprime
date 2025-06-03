@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../Autocoders/Python/schema/default/component_schema.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+
+<component name="MagneticDetumble" kind="active" namespace="Svc">
+    <comment>
+        Component for spacecraft detumbling using magnetic torquers.
+        Implements B-dot control law.
+    </comment>
+
+    <import_port_type>Svc/MagneticDetumble/Ports.fpp</import_port_type>
+    <import_serializable_type>Svc/MagneticDetumble/MagneticDetumbleTypes.fpp</import_serializable_type>
+
+    <ports>
+        <port name="angularVelocityIn" data_type="Svc.AngVel" kind="input" max_number="1">
+            <comment>Input for current angular velocity vector</comment>
+        </port>
+        <port name="magneticFieldIn" data_type="Svc.MagField" kind="input" max_number="1">
+            <comment>Input for current magnetic field vector</comment>
+        </port>
+        <port name="dipoleRequestOut" data_type="Svc.MagDipoleCmd" kind="output" max_number="1">
+            <comment>Output for commanded magnetic dipole moment</comment>
+        </port>
+        <port name="schedIn" kind="input" data_type="Fw::Sched" max_number="1">
+            <comment>Scheduler input port</comment>
+        </port>
+    </ports>
+
+    <telemetry>
+        <channel id="0" name="angularVelocity" data_type="Svc.Vector3" update="on_change" format_string="(%f, %f, %f) rad/s">
+            <comment>Current angular velocity vector used in control law</comment>
+        </channel>
+        <channel id="1" name="magneticField" data_type="Svc.Vector3" update="on_change" format_string="(%f, %f, %f) T">
+            <comment>Current magnetic field vector used in control law</comment>
+        </channel>
+        <channel id="2" name="controlGain" data_type="F32" update="on_change" format_string="%f">
+            <comment>Calculated control gain k!</comment>
+        </channel>
+        <channel id="3" name="commandedDipole" data_type="Svc.Vector3" update="on_change" format_string="(%f, %f, %f) A*m^2">
+            <comment>Commanded magnetic dipole moment</comment>
+        </channel>
+    </telemetry>
+    <events>
+        <event id="0" name="DetumbleInitialized" severity="ACTIVITY_HI" format_string="MagneticDetumble component initialized with gain k! = %f">
+            <comment>MagneticDetumble component has been initialized.</comment>
+            <args>
+                <arg name="gain" type="F32"/>
+            </args>
+        </event>
+        <event id="1" name="MagFieldNearZero" severity="WARNING_LO" format_string="Magnetic field magnitude (%f T) is near zero. Commanding zero dipole.">
+            <comment>Magnetic field magnitude is too small for reliable control.</comment>
+            <args>
+                <arg name="magnitude" type="F32"/>
+            </args>
+        </event>
+        <event id="2" name="DipoleSaturated" severity="WARNING_LO" format_string="Commanded dipole moment (%f, %f, %f A*m^2) exceeds saturation limit of %f A*m^2. Outputting clamped value.">
+            <comment>Commanded magnetic dipole moment was saturated.</comment>
+            <args>
+                <arg name="commanded_x" type="F32"/>
+                <arg name="commanded_y" type="F32"/>
+                <arg name="commanded_z" type="F32"/>
+                <arg name="limit" type="F32"/>
+            </args>
+        </event>
+        <event id="3" name="ParameterUpdate" severity="ACTIVITY_HI" format_string="Control parameter %s updated to %f. Recalculated gain k! = %f">
+            <comment>A control parameter was updated.</comment>
+            <args>
+                <arg name="parameterName" type="Fw::LogStringArg" size="40"/>
+                <arg name="value" type="F32"/>
+                <arg name="newGain" type="F32"/>
+            </args>
+        </event>
+    </events>
+    <parameters>
+        <!-- Parameters will be defined later -->
+    </parameters>
+</component>
